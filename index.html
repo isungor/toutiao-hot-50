@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日头条热榜 TOP 50 · 2026年5月14日</title>
+<style>
+/* ===== CSS 变量 ===== */
+:root {
+  --red: #e8321e;
+  --red-light: #ff5a42;
+  --red-bg: #fff2f0;
+  --orange: #ff7b00;
+  --gold: #f5a623;
+  --bg: #f2f3f5;
+  --card: #ffffff;
+  --text: #1a1a1a;
+  --text2: #555;
+  --text3: #999;
+  --border: #e8e8e8;
+  --sh: 0 1px 6px rgba(0,0,0,.08);
+  --sh2: 0 4px 16px rgba(0,0,0,.12);
+  --r: 12px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0f0f0f; --card:#1c1c1c; --text:#f0f0f0; --text2:#aaa;
+    --text3:#666; --border:#2e2e2e; --red-bg:#2a1210;
+    --sh:0 1px 6px rgba(0,0,0,.4); --sh2:0 4px 16px rgba(0,0,0,.5);
+  }
+}
+
+/* ===== 全局 ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB",
+    "Microsoft YaHei",Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--text); font-size:15px; line-height:1.5;
+}
+a{color:inherit;text-decoration:none}
+a:hover{color:var(--red)}
+
+/* ===== 顶部 Header ===== */
+.header{
+  background:linear-gradient(135deg,#e8321e 0%,#c41800 100%);
+  color:#fff; text-align:center;
+  padding:32px 20px 26px;
+  box-shadow:0 3px 20px rgba(232,50,30,.45);
+}
+.header-badge{
+  display:inline-block; background:rgba(255,255,255,.18);
+  font-size:11px; letter-spacing:3px; text-transform:uppercase;
+  padding:4px 14px; border-radius:20px; margin-bottom:10px;
+}
+.header h1{
+  font-size:28px; font-weight:900; letter-spacing:1px; margin-bottom:6px;
+}
+.header-date{
+  font-size:13px; opacity:.82; margin-bottom:12px;
+}
+.header-stats{
+  display:inline-flex; gap:20px; font-size:12px;
+  background:rgba(0,0,0,.18); padding:6px 18px; border-radius:20px;
+}
+.header-stats span::before{margin-right:5px}
+
+/* ===== 容器 ===== */
+.wrap{max-width:780px; margin:0 auto; padding:24px 16px 60px}
+
+/* ===== 分区标题 ===== */
+.sec-title{
+  display:flex; align-items:center; gap:10px;
+  font-size:13px; font-weight:700; color:var(--text3);
+  letter-spacing:1.5px; text-transform:uppercase;
+  margin:28px 0 14px;
+}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-title em{font-style:normal}
+
+/* ===== 条目卡片 ===== */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{
+  background:var(--card); border-radius:var(--r);
+  border:1px solid var(--border); box-shadow:var(--sh);
+  padding:14px 16px;
+  display:flex; align-items:flex-start; gap:13px;
+  transition:box-shadow .2s,transform .2s;
+  cursor:pointer;
+}
+.item:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.item:hover .item-title{color:var(--red)}
+
+/* 前3名特殊样式 */
+.item.t1{border-left:4px solid #e8321e; background:linear-gradient(to right,#fff5f3 0%,var(--card) 60%)}
+.item.t2{border-left:4px solid #c0956a}
+.item.t3{border-left:4px solid #b0a060}
+@media(prefers-color-scheme:dark){
+  .item.t1{background:linear-gradient(to right,#2a120f 0%,var(--card) 60%)}
+}
+
+/* ===== 排名徽章 ===== */
+.rank{
+  flex-shrink:0; width:36px; height:28px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:15px; line-height:1; margin-top:1px;
+}
+.r1{background:linear-gradient(135deg,#ffe259,#ffa751);color:#fff}
+.r2{background:linear-gradient(135deg,#d4d4d4,#9e9e9e);color:#fff}
+.r3{background:linear-gradient(135deg,#d4a05a,#8d5a1e);color:#fff}
+.r-hot{background:var(--red-bg);color:var(--red);border:1px solid rgba(232,50,30,.2);font-size:14px}
+.r-norm{background:var(--bg);color:var(--text3);border:1px solid var(--border);font-size:14px}
+
+/* ===== 内容区 ===== */
+.item-body{flex:1;min-width:0}
+.item-title{
+  font-size:16px; font-weight:600; line-height:1.45; color:var(--text);
+  margin-bottom:9px; word-break:break-all; transition:color .15s;
+}
+.item-foot{display:flex;align-items:center;gap:8px}
+.tag{
+  flex-shrink:0; font-size:10px; font-weight:700; padding:2px 8px;
+  border-radius:10px; white-space:nowrap;
+}
+.tag-hot  {background:var(--red-bg);color:var(--red);border:1px solid rgba(232,50,30,.2)}
+.tag-new  {background:#e8f5e9;color:#2e7d32;border:1px solid rgba(46,125,50,.2)}
+.tag-site {background:#e3f2fd;color:#1565c0;border:1px solid rgba(21,101,192,.2)}
+.tag-rumor{background:#fce4ec;color:#880e4f;border:1px solid rgba(136,14,79,.2)}
+.tag-interp{background:#f3e5f5;color:#6a1b9a;border:1px solid rgba(106,27,154,.2)}
+@media(prefers-color-scheme:dark){
+  .tag-hot  {background:#2a1210;border-color:rgba(232,50,30,.35)}
+  .tag-new  {background:#0a1f0b;border-color:rgba(46,125,50,.35)}
+  .tag-site {background:#0b1929;border-color:rgba(21,101,192,.35)}
+  .tag-rumor{background:#1f0a10;border-color:rgba(136,14,79,.35)}
+  .tag-interp{background:#1a0d23;border-color:rgba(106,27,154,.35)}
+}
+.bar-wrap{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#e8321e,#ff7b00)}
+.hot-num{
+  flex-shrink:0; font-size:11px; font-weight:700;
+  color:var(--orange); white-space:nowrap;
+}
+
+/* ===== 底部 ===== */
+.footer{
+  text-align:center; padding:30px 20px; font-size:12px; color:var(--text3);
+  border-top:1px solid var(--border); margin-top:10px;
+}
+.footer p+p{margin-top:6px}
+.footer a{
+  display:inline-block; margin-top:14px;
+  background:var(--red); color:#fff; font-size:14px; font-weight:600;
+  padding:11px 32px; border-radius:30px; transition:background .2s;
+}
+.footer a:hover{background:var(--red-light);color:#fff}
+
+/* ===== 回顶按钮 ===== */
+#top-btn{
+  position:fixed; bottom:24px; right:20px;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--red); color:#fff; font-size:20px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 12px rgba(232,50,30,.5);
+  cursor:pointer; border:none; transition:opacity .2s,transform .2s;
+  opacity:0; pointer-events:none; z-index:999;
+}
+#top-btn.show{opacity:1;pointer-events:all}
+#top-btn:hover{transform:scale(1.1)}
+
+/* ===== 响应式 ===== */
+@media(max-width:480px){
+  .header h1{font-size:22px}
+  .item-title{font-size:15px}
+  .rank{width:30px;height:24px;font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部 ===== -->
+<header class="header">
+  <div class="header-badge">📰 今日头条 · 移动热榜</div>
+  <h1>🔥 头条热榜 TOP 50</h1>
+  <p class="header-date">2026年5月14日 · 21:47（北京时间）实时抓取</p>
+  <div class="header-stats">
+    <span>📊 共 50 条热点</span>
+    <span>🔗 点标题直达原文</span>
+    <span>📱 移动端数据</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===== TOP 1–10 ===== -->
+<div class="sec-title"><em>🏆</em> TOP 1–10 · 超级热点</div>
+<div class="list">
+
+<div class="item t1"><div class="rank r1">1</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639683077849271858/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">习近平为特朗普举行欢迎宴会</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:100%"></div></div><span class="hot-num">9399万</span></div>
+</div></div>
+
+<div class="item t2"><div class="rank r2">2</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639622366336253958/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">特朗普称赞"中国太美了"</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:90%"></div></div><span class="hot-num">8504万</span></div>
+</div></div>
+
+<div class="item t3"><div class="rank r3">3</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/article/7639581449259090467" target="_blank" rel="noopener">中美经贸关系的本质是互利共赢</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:82%"></div></div><span class="hot-num">7695万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-hot">4</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639168248915771435/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">A股尾盘为何风向突变</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:74%"></div></div><span class="hot-num">6963万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-hot">5</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639347847373045814/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">特朗普：世上最顶级企业都想来中国</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:67%"></div></div><span class="hot-num">6300万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-hot">6</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639540358438866482/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">网警侦破2起有偿删差评案 刑拘7人</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:61%"></div></div><span class="hot-num">5701万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-hot">7</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639564492927369279/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">业内：A股急跌后或将迅速回稳</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:55%"></div></div><span class="hot-num">5158万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-hot">8</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639531998076747786/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">库克：中美会谈现场很棒</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:50%"></div></div><span class="hot-num">4667万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-hot">9</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639597538089779263/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">小学生为绿化带石墩贴上反光条</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:45%"></div></div><span class="hot-num">4223万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-hot">10</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639661429909360182/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">山东新首富造出苏州第一个1万亿</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:41%"></div></div><span class="hot-num">3821万</span></div>
+</div></div>
+
+</div><!-- /list -->
+
+<!-- ===== TOP 11–30 ===== -->
+<div class="sec-title"><em>📈</em> TOP 11–30 · 热门话题</div>
+<div class="list">
+
+<div class="item"><div class="rank r-norm">11</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638851588518215716/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">"四川攀枝花桃子烂地里"不实</a>
+<div class="item-foot"><span class="tag tag-rumor">🚫 辟谣</span><div class="bar-wrap"><div class="bar-fill" style="width:37%"></div></div><span class="hot-num">3458万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">12</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638934277283643401/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">中方：美方务必慎之又慎处理台湾问题</a>
+<div class="item-foot"><span class="tag tag-hot">🔥 热</span><div class="bar-wrap"><div class="bar-fill" style="width:33%"></div></div><span class="hot-num">3129万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">13</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639598358487040063/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">河南濮阳17岁失联男孩遗体已找到</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:30%"></div></div><span class="hot-num">2831万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">14</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638863754645782534/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">特朗普为中国少年儿童驻足鼓掌</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:27%"></div></div><span class="hot-num">2561万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">15</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639585930587950619/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">《给阿嬷的情书》票房破2亿</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:25%"></div></div><span class="hot-num">2318万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">16</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639340883829964863/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">鹦鹉放飞不愿回家被主人一句话硬控</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:22%"></div></div><span class="hot-num">2097万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">17</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639626639860780553/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">马斯克360度转圈拍摄人民大会堂</a>
+<div class="item-foot"><span class="tag tag-site">📍 现场</span><div class="bar-wrap"><div class="bar-fill" style="width:20%"></div></div><span class="hot-num">1898万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">18</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639709677650972206/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">周大福一口价金饰为何涨价</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:18%"></div></div><span class="hot-num">1717万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">19</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639686134993846315/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">高中男生偷拍女同学私密视频并传播</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:17%"></div></div><span class="hot-num">1554万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">20</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639530295872749587/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">特朗普：今天的会谈举世瞩目</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:15%"></div></div><span class="hot-num">1406万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">21</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638842179570188329/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">国际足联盼中国青少年现身世界杯赛场</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:14%"></div></div><span class="hot-num">1272万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">22</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638875905051066406/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">女子把孩子哄睡后依偎在老公怀里</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:12%"></div></div><span class="hot-num">1151万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">23</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638727148517982235/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">参加中美元首会谈的美方代表都有谁</a>
+<div class="item-foot"><span class="tag tag-interp">💡 解读</span><div class="bar-wrap"><div class="bar-fill" style="width:11%"></div></div><span class="hot-num">1041万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">24</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639668476229730342/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">男子买榴莲多掏10万 商家称已退款</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:10%"></div></div><span class="hot-num">942万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">25</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639700999388532260/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">俄乌战争转折点要来了吗</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:9%"></div></div><span class="hot-num">853万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">26</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638536386953612842/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">中美元首握手</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:8%"></div></div><span class="hot-num">771万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">27</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639648044207931446/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">蜘蛛猴和饲养员互薅头发走红</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:7%"></div></div><span class="hot-num">698万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">28</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639216968348008490/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">全国上百趟绿皮车全列禁烟</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:7%"></div></div><span class="hot-num">632万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">29</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639521789068541993/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">鲁比奥：中美关系非常有建设性</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:6%"></div></div><span class="hot-num">572万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">30</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639576386550824966/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">行业组织警告英国钢铁进口新政风险</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:6%"></div></div><span class="hot-num">517万</span></div>
+</div></div>
+
+</div><!-- /list -->
+
+<!-- ===== TOP 31–50 ===== -->
+<div class="sec-title"><em>📋</em> TOP 31–50 · 上榜热点</div>
+<div class="list">
+
+<div class="item"><div class="rank r-norm">31</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639309488232808454/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">硕贝德：公司股东户数为46344户</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:5%"></div></div><span class="hot-num">468万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">32</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639373671607205938/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">空军一号轰鸣而过中国军人纹丝不动</a>
+<div class="item-foot"><span class="tag tag-site">📍 现场</span><div class="bar-wrap"><div class="bar-fill" style="width:5%"></div></div><span class="hot-num">423万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">33</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639600581389205546/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">纳指科技ETF景顺15日开市起停牌</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:4%"></div></div><span class="hot-num">383万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">34</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639670399000645162/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">专家：短线回调不改变A股牛市方向</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:4%"></div></div><span class="hot-num">347万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">35</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638971080904474687/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">台湾问题处理好了中美关系就能稳定</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:3%"></div></div><span class="hot-num">314万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">36</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639670337428278811/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">《给阿嬷的情书》终于赢回观众</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:3%"></div></div><span class="hot-num">284万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">37</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638909290731864114/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">于东来217元餐费付2000 老板回应</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:3%"></div></div><span class="hot-num">257万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">38</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639507214444576806/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">武汉40只退役警犬寻找领养家庭</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:2%"></div></div><span class="hot-num">232万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">39</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639674141792305178/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">广东一在建桥梁因暴雨垮塌？当地回应</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:2%"></div></div><span class="hot-num">210万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">40</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639030423187734591/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">外交部回应"中美关系新定位"</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:2%"></div></div><span class="hot-num">190万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">41</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638941064065269779/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">老人带百万现金存钱柜员发现是练功券</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:2%"></div></div><span class="hot-num">172万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">42</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638952399986016292/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">岳云鹏探望蔡磊</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:2%"></div></div><span class="hot-num">156万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">43</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639337698403614729/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">乌无人机发现俄军隐藏弹药库</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:2%"></div></div><span class="hot-num">141万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">44</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639349835824463922/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">男子算计亲属独吞千万征收款</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:1%"></div></div><span class="hot-num">128万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">45</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639682018111917587/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">国际足联变"商"联了吗</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:1%"></div></div><span class="hot-num">115万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">46</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639245513659498539/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">特朗普访华欢迎仪式</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:1%"></div></div><span class="hot-num">104万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">47</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7638781423885139987/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">科技股之外美股散户还在炒作什么主线</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:1%"></div></div><span class="hot-num">94万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">48</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639670244876750399/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">印度试射洲际导弹有何意味</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:1%"></div></div><span class="hot-num">85万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">49</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639659537297702938/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">李想发文致敬雷军王传福等</a>
+<div class="item-foot"><span class="tag tag-new">🆕 新</span><div class="bar-wrap"><div class="bar-fill" style="width:1%"></div></div><span class="hot-num">77万</span></div>
+</div></div>
+
+<div class="item"><div class="rank r-norm">50</div><div class="item-body">
+<a class="item-title" href="https://www.toutiao.com/trending/7639676163111075894/?category_name=topic_innerflow&event_type=hot_board" target="_blank" rel="noopener">多方回应支付宝用户被扣款捐赠184万</a>
+<div class="item-foot"><div class="bar-wrap"><div class="bar-fill" style="width:1%"></div></div><span class="hot-num">70万</span></div>
+</div></div>
+
+</div><!-- /list -->
+
+</div><!-- /wrap -->
+
+<!-- ===== 底部 ===== -->
+<footer class="footer">
+  <p>数据来源：今日头条移动热榜 · 实时抓取于 2026年5月14日 21:47（北京时间）</p>
+  <p>点击任意条目标题即可跳转今日头条原文阅读 · 本文件无需网络可直接在浏览器中打开</p>
+  <a href="https://www.toutiao.com/hot-event/hot-board/" target="_blank" rel="noopener">→ 打开今日头条查看最新热榜</a>
+</footer>
+
+<!-- ===== 回顶按钮 ===== -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">↑</button>
+
+<script>
+// 回顶按钮逻辑
+var topBtn = document.getElementById('top-btn');
+window.addEventListener('scroll', function(){
+  topBtn.classList.toggle('show', window.scrollY > 400);
+}, {passive:true});
+
+// 点击卡片任意位置跳转
+document.querySelectorAll('.item').forEach(function(item){
+  item.addEventListener('click', function(e){
+    if(e.target.tagName !== 'A'){
+      var a = item.querySelector('a.item-title');
+      if(a) window.open(a.href, '_blank', 'noopener');
+    }
+  });
+});
+</script>
+</body>
+</html>
