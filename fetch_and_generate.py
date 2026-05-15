@@ -119,6 +119,29 @@ def filter_toutiao_auto(items):
     return normalize_toutiao(result, 10)
 
 
+def filter_weibo_auto(items, limit=15):
+    """从微博数据中按标题关键词筛选汽车类条目"""
+    auto_keywords = [
+        "车", "新能源", "比亚迪", "特斯拉", "丰田", "本田", "宝马", "奔驰",
+        "奥迪", "蔚来", "理想", "小鹏", "吉利", "长安", "大众", "福特",
+        "保时捷", "华为", "小米汽车", "小米SU", "乐道", "方程豹",
+        "自动驾驶", "充电", "续航", "混动", "纯电", "发动机", "变速箱",
+        "汽车", "轿车", "SUV", "MPV", "销量", "召回", "碰撞", "油价",
+        "充电桩", "路测", "试驾", "上市", "首发", "亮相", "东风日产",
+        "问界", "智界", "享界", "极氪", "零跑", "岚图", "深蓝", "哪吒"
+    ]
+    result = []
+    for item in items:
+        title = item.get("title", "")
+        for kw in auto_keywords:
+            if kw in title:
+                result.append(item)
+                break
+        if len(result) >= limit:
+            break
+    return normalize_weibo(result, limit)
+
+
 def filter_weibo_by_label(items, limit=10):
     """从微博数据中按标题关键词筛选文娱类条目"""
     entertainment_keywords = [
@@ -204,7 +227,7 @@ def build_board_html(board_id, icon, title, accent_color, accent_bg, items):
         <div class="item-body">
           <a class="item-title" href="{url}" target="_blank" rel="noopener">{title_text}</a>
           <div class="item-foot">
-            <div class="bar-wrap"><div class="bar-fill" style="width:{pct}%;background:linear-gradient(90deg,{accent_color},{accent_bg})"></div></div>
+            <div class="bar-wrap"><div class="bar-fill" style="width:{pct}%;background:#555"></div></div>
             <span class="hot-num">{hot}</span>
           </div>
         </div>
@@ -535,13 +558,9 @@ def main():
     # 2. 数据处理
     print("\n处理数据...")
 
-    # 汽车热点 (懂车帝数据)
-    auto_hot = normalize_dcd(dcd_raw[:10])
-    print(f"  汽车热点: {len(auto_hot)} 条")
-
-    # 懂车帝热点 (懂车帝数据)
+    # 懂车帝热榜 TOP10 (合并原汽车热点+懂车帝)
     dcd_hot = normalize_dcd(dcd_raw[:10])
-    print(f"  懂车帝热点: {len(dcd_hot)} 条")
+    print(f"  懂车帝热榜: {len(dcd_hot)} 条")
 
     # 今日头条汽车榜 (从头条筛选汽车相关)
     toutiao_auto = filter_toutiao_auto(toutiao_raw)
@@ -559,6 +578,10 @@ def main():
     weibo_hot = normalize_weibo(weibo_raw, 20)
     print(f"  微博热搜: {len(weibo_hot)} 条")
 
+    # 微博汽车 (从微博筛选)
+    weibo_auto = filter_weibo_auto(weibo_raw, 15)
+    print(f"  微博汽车: {len(weibo_auto)} 条 (筛选自微博)")
+
     # 微博文娱 (从微博筛选)
     weibo_ent = filter_weibo_by_label(weibo_raw, 10)
     print(f"  微博文娱: {len(weibo_ent)} 条 (筛选自微博)")
@@ -569,12 +592,12 @@ def main():
 
     # 3. 组装看板
     boards = [
-        {"id": "auto-hot",    "icon": "🚗", "title": "汽车热点",     "color": "#2ed573", "color_light": "#7bed9f", "items": auto_hot},
-        {"id": "dcd-hot",     "icon": "🏎", "title": "懂车帝",       "color": "#00b894", "color_light": "#55efc4", "items": dcd_hot},
+        {"id": "dcd-hot",     "icon": "🏎", "title": "懂车帝热榜",   "color": "#00b894", "color_light": "#55efc4", "items": dcd_hot},
         {"id": "tt-auto",     "icon": "🔧", "title": "头条汽车",     "color": "#0984e3", "color_light": "#74b9ff", "items": toutiao_auto},
         {"id": "tt-hot",      "icon": "📰", "title": "今日头条",     "color": "#ff4757", "color_light": "#ff6b81", "items": toutiao_hot},
         {"id": "dy-hot",      "icon": "🎵", "title": "抖音热榜",     "color": "#1a1a2e", "color_light": "#636e72", "items": douyin_hot},
         {"id": "wb-hot",      "icon": "📱", "title": "微博热搜",     "color": "#ff4500", "color_light": "#ff6348", "items": weibo_hot},
+        {"id": "wb-auto",     "icon": "🚗", "title": "微博汽车",     "color": "#e17055", "color_light": "#fab1a0", "items": weibo_auto},
         {"id": "wb-ent",      "icon": "🎬", "title": "微博文娱",     "color": "#e84393", "color_light": "#fd79a8", "items": weibo_ent},
         {"id": "wb-tech",     "icon": "💻", "title": "微博科技",     "color": "#6c5ce7", "color_light": "#a29bfe", "items": weibo_tech},
     ]
