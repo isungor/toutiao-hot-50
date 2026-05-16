@@ -23,10 +23,38 @@ BJ_TZ = timezone(timedelta(hours=8))
 AUTO_KEYWORDS = [
     "车", "新能源", "比亚迪", "特斯拉", "丰田", "本田", "宝马", "奔驰",
     "奥迪", "蔚来", "理想", "小鹏", "吉利", "长安", "大众", "福特",
-    "保时捷", "比亚迪", "华为", "小米汽车", "小米SU", "乐道", "方程豹",
+    "保时捷", "华为", "小米汽车", "小米SU", "乐道", "方程豹",
     "自动驾驶", "充电", "续航", "混动", "纯电", "发动机", "变速箱",
     "汽车", "轿车", "SUV", "MPV", "销量", "召回", "碰撞", "油价",
     "充电桩", "路测", "试驾", "上市", "首发", "亮相"
+]
+
+# 微博汽车筛选关键词（更宽泛）
+WEIBO_AUTO_KEYWORDS = [
+    "车", "新能源", "比亚迪", "特斯拉", "丰田", "本田", "宝马", "奔驰",
+    "奥迪", "蔚来", "理想", "小鹏", "吉利", "长安", "大众", "福特",
+    "保时捷", "华为", "小米汽车", "小米SU", "乐道", "方程豹",
+    "自动驾驶", "充电", "续航", "混动", "纯电", "发动机", "变速箱",
+    "汽车", "轿车", "SUV", "MPV", "销量", "召回", "碰撞", "油价",
+    "充电桩", "路测", "试驾", "上市", "首发", "亮相", "东风日产",
+    "问界", "智界", "享界", "极氪", "零跑", "岚图", "深蓝", "哪吒"
+]
+
+# 微博文娱关键词
+ENT_KEYWORDS = [
+    "文娱", "影视", "综艺", "明星", "音乐", "电影", "电视剧", "演出", "娱乐",
+    "浪姐", "歌手", "乘风", "演唱会", "票房", "热巴", "杨幂", "刘诗诗", "张柏芝",
+    "白鹿", "迪丽热巴", "王力宏", "柯南", "何猷君", "奚梦瑶", "方媛", "李纯",
+    "徐志胜", "张嘉益", "痞幼", "沈腾", "孙颖莎", "柳智敏", "Faker", "李乃文",
+    "梅婷", "选秀"
+]
+
+# 微博科技关键词
+TECH_KEYWORDS = [
+    "科技", "数码", "手机", "AI", "芯片", "互联网", "技术", "App", "软件",
+    "智能", "机器人", "苹果", "华为", "iPhone", "小米", "比亚迪", "特斯拉",
+    "理想", "蔚来", "新能源", "半导体", "5G", "6G", "CPU", "GPU", "自动驾驶",
+    "支付", "支付宝", "A股", "黄金", "库克", "降价", "换代"
 ]
 
 
@@ -47,10 +75,10 @@ def fetch_json(url):
         return []
 
 
-def normalize_dcd(items):
+def normalize_dcd(items, limit=10):
     """标准化懂车帝数据"""
     result = []
-    for i, item in enumerate(items[:10]):
+    for i, item in enumerate(items[:limit]):
         result.append({
             "rank": item.get("rank", i + 1),
             "title": item.get("title", ""),
@@ -105,88 +133,18 @@ def normalize_weibo(items, limit=20):
     return result
 
 
-def filter_toutiao_auto(items):
-    """从头条数据中筛选汽车相关条目"""
+def filter_by_keywords(items, keywords, normalizer, limit=10):
+    """通用关键词筛选"""
     result = []
     for item in items:
         title = item.get("title", "")
-        for kw in AUTO_KEYWORDS:
-            if kw in title:
-                result.append(item)
-                break
-        if len(result) >= 10:
-            break
-    return normalize_toutiao(result, 10)
-
-
-def filter_weibo_auto(items, limit=15):
-    """从微博数据中按标题关键词筛选汽车类条目"""
-    auto_keywords = [
-        "车", "新能源", "比亚迪", "特斯拉", "丰田", "本田", "宝马", "奔驰",
-        "奥迪", "蔚来", "理想", "小鹏", "吉利", "长安", "大众", "福特",
-        "保时捷", "华为", "小米汽车", "小米SU", "乐道", "方程豹",
-        "自动驾驶", "充电", "续航", "混动", "纯电", "发动机", "变速箱",
-        "汽车", "轿车", "SUV", "MPV", "销量", "召回", "碰撞", "油价",
-        "充电桩", "路测", "试驾", "上市", "首发", "亮相", "东风日产",
-        "问界", "智界", "享界", "极氪", "零跑", "岚图", "深蓝", "哪吒"
-    ]
-    result = []
-    for item in items:
-        title = item.get("title", "")
-        for kw in auto_keywords:
+        for kw in keywords:
             if kw in title:
                 result.append(item)
                 break
         if len(result) >= limit:
             break
-    return normalize_weibo(result, limit)
-
-
-def filter_weibo_by_label(items, limit=10):
-    """从微博数据中按标题关键词筛选文娱类条目"""
-    entertainment_keywords = [
-        "文娱", "影视", "综艺", "明星", "音乐", "电影", "电视剧", "演出", "娱乐",
-        "浪姐", "歌手", "乘风", "演唱会", "票房", "热巴", "杨幂", "刘诗诗", "张柏芝",
-        "白鹿", "迪丽热巴", "王力宏", "柯南", "何猷君", "奚梦瑶", "方媛", "李纯",
-        "徐志胜", "张嘉益", "痞幼", "沈腾", "孙颖莎", "柳智敏", "Faker", "李乃文",
-        "梅婷", "选秀"
-    ]
-    result = []
-    for item in items:
-        title = item.get("title", "")
-        match = False
-        for kw in entertainment_keywords:
-            if kw in title:
-                match = True
-                break
-        if match:
-            result.append(item)
-        if len(result) >= limit:
-            break
-    return normalize_weibo(result, limit)
-
-
-def filter_weibo_tech(items, limit=10):
-    """从微博数据中按标题关键词筛选科技类条目"""
-    tech_keywords = [
-        "科技", "数码", "手机", "AI", "芯片", "互联网", "技术", "App", "软件",
-        "智能", "机器人", "苹果", "华为", "iPhone", "小米", "比亚迪", "特斯拉",
-        "理想", "蔚来", "新能源", "半导体", "5G", "6G", "CPU", "GPU", "自动驾驶",
-        "支付", "支付宝", "A股", "黄金", "库克", "降价", "换代"
-    ]
-    result = []
-    for item in items:
-        title = item.get("title", "")
-        match = False
-        for kw in tech_keywords:
-            if kw in title:
-                match = True
-                break
-        if match:
-            result.append(item)
-        if len(result) >= limit:
-            break
-    return normalize_weibo(result, limit)
+    return normalizer(result, limit)
 
 
 # ========== HTML 生成 ==========
@@ -205,7 +163,7 @@ def format_hot(val):
     return s
 
 
-def build_board_html(board_id, icon, title, accent_color, accent_bg, items):
+def build_board_html(board_id, logo_url, platform_name, badge_text, accent_color, items):
     """生成单个看板HTML"""
     item_count = len(items)
     max_hot = max((item.get("hot_num", 0) for item in items), default=1) or 1
@@ -213,12 +171,11 @@ def build_board_html(board_id, icon, title, accent_color, accent_bg, items):
     items_html = ""
     for item in items:
         rank = item.get("rank", 0)
-        title_text = item.get("title", "")
-        url = item.get("url", "#")
+        title_text = item.get("title", "").replace("<", "&lt;").replace(">", "&gt;")
+        url = item.get("url", "#").replace("'", "&#39;")
         hot = format_hot(item.get("hot", 0))
         hot_num = item.get("hot_num", 0)
         pct = round(hot_num / max_hot * 100) if max_hot > 0 else 0
-        label = item.get("label", "")
 
         rank_cls = "rank-top" if rank <= 3 else ("rank-accent" if rank <= 10 else "rank-normal")
 
@@ -236,9 +193,9 @@ def build_board_html(board_id, icon, title, accent_color, accent_bg, items):
 
     return f"""  <div class="board" id="{board_id}">
     <div class="board-head">
-      <span class="icon">{icon}</span>
-      <span class="board-name">{title}</span>
-      <span class="badge" style="background:{accent_color};color:#fff">TOP {item_count}</span>
+      <img class="logo" src="{logo_url}" alt="{platform_name}" onerror="this.style.display='none'">
+      <span class="board-name">{platform_name}</span>
+      <span class="badge" style="background:{accent_color};color:#fff">{badge_text}</span>
     </div>
     <div class="list">
 {items_html}    </div>
@@ -254,8 +211,8 @@ def generate_html(boards_data):
     boards_html = ""
     for board in boards_data:
         boards_html += build_board_html(
-            board["id"], board["icon"], board["title"],
-            board["color"], board["color_light"], board["items"]
+            board["id"], board["logo"], board["name"],
+            board["badge"], board["color"], board["items"]
         )
 
     return f"""<!DOCTYPE html>
@@ -336,14 +293,10 @@ body {{
   display: flex;
   flex-direction: column;
 }}
-.board.span-2 {{ grid-column: span 2; }}
-.board.span-3 {{ grid-column: span 3; }}
-.board.span-4 {{ grid-column: span 4; }}
-
 .board-head {{
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 12px 14px 10px;
   border-bottom: 1px solid var(--border);
   position: sticky;
@@ -351,20 +304,27 @@ body {{
   background: var(--card);
   z-index: 10;
 }}
-.board-head .icon {{ font-size: 18px; }}
-.board-head .board-name {{
+.logo {{
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: contain;
+  flex-shrink: 0;
+}}
+.board-name {{
   font-size: 14px;
   font-weight: 700;
   flex: 1;
+  color: var(--text);
 }}
-.board-head .badge {{
+.badge {{
   font-size: 10px;
   font-weight: 700;
-  padding: 1px 7px;
+  padding: 2px 8px;
   border-radius: 8px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }}
-
 .list {{
   flex: 1;
   padding: 4px 6px 8px;
@@ -384,7 +344,6 @@ body {{
 @media (prefers-color-scheme: dark) {{
   .item:hover {{ background: rgba(255,255,255,0.03); }}
 }}
-
 .rank {{
   min-width: 22px;
   height: 22px;
@@ -411,7 +370,6 @@ body {{
   color: var(--text2);
   font-weight: 600;
 }}
-
 .item-body {{ flex: 1; min-width: 0; }}
 .item-title {{
   display: block;
@@ -428,7 +386,6 @@ body {{
   transition: opacity 0.15s;
 }}
 .item-title:hover {{ opacity: 0.6; }}
-
 .item-foot {{
   display: flex;
   align-items: center;
@@ -455,7 +412,6 @@ body {{
   min-width: 30px;
   text-align: right;
 }}
-
 .footer {{
   text-align: center;
   padding: 16px;
@@ -465,12 +421,8 @@ body {{
   max-width: 1400px;
   margin: 0 auto;
 }}
-.footer a {{
-  color: #667eea;
-  text-decoration: none;
-}}
+.footer a {{ color: #667eea; text-decoration: none; }}
 .footer a:hover {{ text-decoration: underline; }}
-
 .back-top {{
   position: fixed;
   bottom: 24px;
@@ -492,15 +444,11 @@ body {{
 }}
 .back-top.show {{ opacity: 1; }}
 .back-top:hover {{ transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }}
-
-/* Mobile */
 @media (max-width: 1100px) {{
   .boards {{ grid-template-columns: repeat(2, 1fr); }}
-  .board.span-2, .board.span-3, .board.span-4 {{ grid-column: span 2; }}
 }}
 @media (max-width: 640px) {{
   .boards {{ grid-template-columns: 1fr; gap: 10px; }}
-  .board.span-2, .board.span-3, .board.span-4 {{ grid-column: span 1; }}
   .header h1 {{ font-size: 20px; }}
   .list {{ max-height: none; }}
 }}
@@ -510,7 +458,7 @@ body {{
 
 <div class="header">
   <h1>全网热榜看板</h1>
-  <div class="sub">数据每日 18:00 自动更新 <span>{update_time}</span></div>
+  <div class="sub">每日 10:30 &amp; 15:00 自动更新 <span>{update_time}</span></div>
 </div>
 
 <div class="boards">
@@ -538,7 +486,7 @@ def main():
     print(f"全网热榜看板 - 数据抓取 {datetime.now(BJ_TZ).strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 50)
 
-    # 1. 抓取基础数据（只需4个API）
+    # 1. 抓取基础数据
     print("\n[1/4] 抓取懂车帝热榜...")
     dcd_raw = fetch_json(f"{API_BASE}/dongchedi")
     print(f"  → 获取 {len(dcd_raw)} 条")
@@ -558,13 +506,17 @@ def main():
     # 2. 数据处理
     print("\n处理数据...")
 
-    # 懂车帝热榜 TOP10 (合并原汽车热点+懂车帝)
-    dcd_hot = normalize_dcd(dcd_raw[:10])
-    print(f"  懂车帝热榜: {len(dcd_hot)} 条")
+    # 汽车之家热榜 TOP10 (懂车帝数据替代)
+    autohome_hot = normalize_dcd(dcd_raw[:10])
+    print(f"  汽车之家热榜: {len(autohome_hot)} 条 (懂车帝数据)")
 
-    # 今日头条汽车榜 (从头条筛选汽车相关)
-    toutiao_auto = filter_toutiao_auto(toutiao_raw)
-    print(f"  头条汽车: {len(toutiao_auto)} 条 (筛选自头条)")
+    # 懂车帝热点榜 TOP10
+    dcd_hot = normalize_dcd(dcd_raw[:10])
+    print(f"  懂车帝热点榜: {len(dcd_hot)} 条")
+
+    # 微博汽车热榜 TOP10 (从微博筛选)
+    weibo_auto = filter_by_keywords(weibo_raw, WEIBO_AUTO_KEYWORDS, normalize_weibo, 10)
+    print(f"  微博汽车热榜: {len(weibo_auto)} 条 (筛选自微博)")
 
     # 今日头条热榜 TOP20
     toutiao_hot = normalize_toutiao(toutiao_raw, 20)
@@ -578,28 +530,82 @@ def main():
     weibo_hot = normalize_weibo(weibo_raw, 20)
     print(f"  微博热搜: {len(weibo_hot)} 条")
 
-    # 微博汽车 (从微博筛选)
-    weibo_auto = filter_weibo_auto(weibo_raw, 15)
-    print(f"  微博汽车: {len(weibo_auto)} 条 (筛选自微博)")
-
-    # 微博文娱 (从微博筛选)
-    weibo_ent = filter_weibo_by_label(weibo_raw, 10)
+    # 微博文娱 TOP10 (从微博筛选)
+    weibo_ent = filter_by_keywords(weibo_raw, ENT_KEYWORDS, normalize_weibo, 10)
     print(f"  微博文娱: {len(weibo_ent)} 条 (筛选自微博)")
 
-    # 微博科技 (从微博筛选)
-    weibo_tech = filter_weibo_tech(weibo_raw, 10)
+    # 微博科技 TOP10 (从微博筛选)
+    weibo_tech = filter_by_keywords(weibo_raw, TECH_KEYWORDS, normalize_weibo, 10)
     print(f"  微博科技: {len(weibo_tech)} 条 (筛选自微博)")
 
-    # 3. 组装看板
+    # 3. 组装看板（顺序：第一行4个，第二行4个）
     boards = [
-        {"id": "dcd-hot",     "icon": "🏎", "title": "懂车帝热榜",   "color": "#00b894", "color_light": "#55efc4", "items": dcd_hot},
-        {"id": "tt-auto",     "icon": "🔧", "title": "头条汽车",     "color": "#0984e3", "color_light": "#74b9ff", "items": toutiao_auto},
-        {"id": "tt-hot",      "icon": "📰", "title": "今日头条",     "color": "#ff4757", "color_light": "#ff6b81", "items": toutiao_hot},
-        {"id": "dy-hot",      "icon": "🎵", "title": "抖音热榜",     "color": "#1a1a2e", "color_light": "#636e72", "items": douyin_hot},
-        {"id": "wb-hot",      "icon": "📱", "title": "微博热搜",     "color": "#ff4500", "color_light": "#ff6348", "items": weibo_hot},
-        {"id": "wb-auto",     "icon": "🚗", "title": "微博汽车",     "color": "#e17055", "color_light": "#fab1a0", "items": weibo_auto},
-        {"id": "wb-ent",      "icon": "🎬", "title": "微博文娱",     "color": "#e84393", "color_light": "#fd79a8", "items": weibo_ent},
-        {"id": "wb-tech",     "icon": "💻", "title": "微博科技",     "color": "#6c5ce7", "color_light": "#a29bfe", "items": weibo_tech},
+        # 第一行
+        {
+            "id": "autohome-hot",
+            "logo": "https://www.autohome.com.cn/favicon.ico",
+            "name": "汽车之家",
+            "badge": "热榜",
+            "color": "#e84a4a",
+            "items": autohome_hot,
+        },
+        {
+            "id": "dcd-hot",
+            "logo": "https://www.dongchedi.com/favicon.ico",
+            "name": "懂车帝",
+            "badge": "热点榜",
+            "color": "#00b894",
+            "items": dcd_hot,
+        },
+        {
+            "id": "wb-auto",
+            "logo": "https://weibo.com/favicon.ico",
+            "name": "新浪微博",
+            "badge": "汽车热榜",
+            "color": "#e17055",
+            "items": weibo_auto,
+        },
+        {
+            "id": "tt-hot",
+            "logo": "https://www.toutiao.com/favicon.ico",
+            "name": "今日头条",
+            "badge": "头条热榜",
+            "color": "#ff4757",
+            "items": toutiao_hot,
+        },
+        # 第二行
+        {
+            "id": "dy-hot",
+            "logo": "https://www.douyin.com/favicon.ico",
+            "name": "抖音",
+            "badge": "热榜",
+            "color": "#1a1a2e",
+            "items": douyin_hot,
+        },
+        {
+            "id": "wb-hot",
+            "logo": "https://weibo.com/favicon.ico",
+            "name": "新浪微博",
+            "badge": "热搜榜",
+            "color": "#ff4500",
+            "items": weibo_hot,
+        },
+        {
+            "id": "wb-ent",
+            "logo": "https://weibo.com/favicon.ico",
+            "name": "新浪微博",
+            "badge": "文娱热搜",
+            "color": "#e84393",
+            "items": weibo_ent,
+        },
+        {
+            "id": "wb-tech",
+            "logo": "https://weibo.com/favicon.ico",
+            "name": "新浪微博",
+            "badge": "科技热搜",
+            "color": "#6c5ce7",
+            "items": weibo_tech,
+        },
     ]
 
     # 4. 生成 HTML
@@ -614,7 +620,7 @@ def main():
     print(f"\n✅ 生成完成: {output_path} ({file_size:,} bytes)")
 
     # 检查空看板
-    empty_boards = [b["title"] for b in boards if len(b["items"]) == 0]
+    empty_boards = [b["name"] + " " + b["badge"] for b in boards if len(b["items"]) == 0]
     if empty_boards:
         print(f"⚠️  以下看板无数据: {', '.join(empty_boards)}")
         return 1
