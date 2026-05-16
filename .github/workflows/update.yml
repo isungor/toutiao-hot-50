@@ -2,8 +2,10 @@ name: Update Hot Rankings Dashboard
 
 on:
   schedule:
-    # 北京时间 18:00 = UTC 10:00
-    - cron: '0 10 * * *'
+    # 北京时间 10:30 = UTC 02:30
+    - cron: '30 2 * * *'
+    # 北京时间 15:00 = UTC 07:00
+    - cron: '0 7 * * *'
   workflow_dispatch: # 支持手动触发
 
 permissions:
@@ -29,5 +31,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "auto update: $(date -u +%Y-%m-%d)"
+          git diff --cached --quiet || git commit -m "auto update: $(date -u +%Y-%m-%d %H:%M)"
           git push
